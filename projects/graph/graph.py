@@ -134,18 +134,17 @@ class Graph:
         # head all the way down the line until it finds no neighbors, 
         # go to the last element and repeat, head down that line,
         # until all paths lead to none
-        
-        visited.add(starting_vertex)
-        
         if starting_vertex not in visited:
             print(starting_vertex)
+        visited.add(starting_vertex)
         
+                
         neighbors = self.get_neighbors(starting_vertex)
 
         for neighbor in neighbors:
 
             if neighbor not in visited:
-                print(neighbor)
+                
                 self.dft_recursive(neighbor, visited)    
                 
                 #if result is not None:
