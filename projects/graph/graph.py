@@ -257,7 +257,7 @@ class Graph:
 
                
 
-    def dfs_recursive(self, vertex, destination_vertex, path=[], visited=set()):
+    def dfs_recursive(self, starting_vertex, destination_vertex, path=[], visited=set()):
 
         """
         Return a list containing a path from
@@ -267,22 +267,31 @@ class Graph:
         This should be done using recursion.
         """
         
-        
-        visited.add(vertex)
+        #path is an empty list to start
 
-        if vertex == destination_vertex:
+        visited.add(starting_vertex)
+        #so the starting vertex, or neighbor, in case of recursion, can only be checked at the 
+        # start of the function
+        if starting_vertex == destination_vertex:
             return path
-        
+        # to add starting vertex so it doesnt have issue 
         if len(path) == 0:
-            path.append(vertex)
+            path.append(starting_vertex)
 
-        neighbors = self.get_neighbors(vertex)
+        # get neighbors of the last node, or in the recursive case, the last neighbor
+        neighbors = self.get_neighbors(starting_vertex)
 
+        #add neighbor to visited list
         for neighbor in neighbors:
             if neighbor not in visited:
+                # if neighbor is not in visited, continue traversing downward, run function again
 
                 result = self.dfs_recursive(neighbor, destination_vertex, path + [neighbor],  visited)
                 
+                # in every case, except the one in which the starting vertex, or neighbor == destination
+                # the result returned will be None:
+                # so if the result is not None, you know you have reached the destination with the 
+                # full path leading to the right destination
                 if result is not None:
                     return result
            
