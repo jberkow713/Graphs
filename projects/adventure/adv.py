@@ -310,13 +310,13 @@ while len(visited) < 499:
 
     # move in direction of 1st element in dictionary, or 1st direction, in case of get exits its 
     #always N, S, W, E in that order
-    move = visited[player.current_room.id].pop(0)
+    direction = visited[player.current_room.id].pop(0)
     #add the move's direction to the traversal_path first before moving
-    traversal_path.append(move)
+    traversal_path.append(direction)
     #add opposite direction to reverse list before moving
-    reversedlist.append(reverse(move))
+    reversedlist.append(reverse(direction))
     #move in direction
-    player.travel(move)
+    player.travel(direction)
 
 
 #this function is set up so that only reverses directions when the exits from the room ==1, it offsets that,
