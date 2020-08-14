@@ -1,9 +1,67 @@
 from room import Room
-from player import Player
+#from player import Player
 from world import World
 
 import random
 from ast import literal_eval
+
+
+class Player:
+    def __init__(self, starting_room):
+        self.current_room = starting_room
+    
+    def travel(self, direction, show_rooms = False):
+        next_room = self.current_room.get_room_in_direction(direction)
+        if next_room is not None:
+            self.current_room = next_room
+            if (show_rooms):
+                next_room.print_room_description(self)
+        else:
+            print("You cannot move in that direction.")
+
+class Queue:
+
+    def __init__(self):
+        self.storage = []
+        self.size = 0
+
+    def enqueue(self, value):
+        self.size += 1
+        self.storage.append(value)
+
+    def dequeue(self):
+        if len(self.storage) > 0:
+            self.size -= 1
+            return self.storage.pop(0)
+        else:
+            return None
+
+    def length(self):
+        return self.size 
+
+class Stack:
+
+    def __init__(self):
+        self.storage = []
+        self.size = 0
+
+    def push(self, value):
+        self.size += 1
+        self.storage.append(value)
+
+    def pop(self):
+        if len(self.storage) > 0:
+            self.size -= 1
+            return self.storage.pop()
+
+        else:
+            return None
+
+    def length(self):
+        return self.size 
+
+
+
 
 # Load world
 world = World()
@@ -24,9 +82,13 @@ world.load_graph(room_graph)
 world.print_rooms()
 
 player = Player(world.starting_room)
+#traversal_path = []
+
+
 
 # Fill this out with directions to walk
 # traversal_path = ['n', 'n']
+'''
 traversal_path = ['n', 's', "e", "e", "w", "s", "e", "s", 
 "n", "w", "s", "s", "e", "s", "s", 
 "n", "n", "e", "s", "s", "s", "s", "s", "e", 'w', 'n',
@@ -98,7 +160,7 @@ traversal_path = ['n', 's', "e", "e", "w", "s", "e", "s",
 ]
 
 '''
-
+'''
 , 's', 's', 's', 's', 's', 'w', 'w', 'n', 'w', 'n', 's', 'e', 'n', 'n', 'w', 'n', 's', 'w', 'n',
 'w', 'e', 's', 'e', 'e', 's', 's', 's', 'w', 'w', 'n', 'n', 'w', 'n', 's', 'e', 's', 's', 'w', 
 
@@ -229,8 +291,75 @@ done
 'n', 's', 's', 'w', 'e', 's', 'w', 'w', 'w', 'e', 's', 'w']
 
 '''
+#initial list for reversePath and initial visited dictionary
+traversal_path = []
+reversedlist = [] # keeps track of way back to last room
+visited = {} # path of rooms and their potential exits
+
+def reverse(direction):
+
+    if direction is 'n':
+        return 's'
+
+    if direction is 's':
+        return 'n'
+
+    if direction is 'e':
+        return 'w'
+
+    if direction is 'w':
+        return 'e'
+
+# reverse_direction will return the opposite direction to what the input was
+#player is starting at room 0, as instantiated from above
+#setting initial value in dictionary at starting room to be equal to that room's exits
+
+visited[player.current_room.id] = player.current_room.get_exits()
+
+# initial room set in dictionary, initial dictionary length = 1, so set while loop to check last 499 rooms
+
+while len(visited) < 499:
+
+    #setting term inside while loop to append current room's exits to current_room value in visited dict:
+    #checking all directions you can move
+    if player.current_room.id not in visited:
+        visited[player.current_room.id] = player.current_room.get_exits()
+        visited[player.current_room.id].remove(reversedlist[-1])
+
+    #this represents when you enter a room with only one exit and you backtrack
+    # the last object in the reverse list will always be the direction you have just gone, so they will cancel out,
+    # and the length of the dictionary with that room will be 0
+    # so when you enter a room with one exit, and then remove that opposite direction, you will 
+    # ALWAYS hit this while loop, and in doing so, you will always reverse back to where you were
+
+    # you are using a stack to reverse direction, and you are using a queue, to test all possible branches
+    # from each element
+
+    # the visited dictionaries themselves will contain empty objects , when you have tested all possible exits
+    # from each room, and the length of the visited dictionary will increment until you reach the 499
+    while len(visited[player.current_room.id]) == 0:
+        #reversed = last value in the reverse list
+        reversed = reversedlist.pop()
+        # this is adding the reverse direction to your traversal list
+        traversal_path.append(reversed)
+        #travel in the reverse direction to get back to where you came
+        player.travel(reversed)
+    
+    # while loop causes you to go in reversed direction 
+
+    # move in direction of 1st element in dictionary, or 1st direction, in case of get exits its 
+    #always N, S, W, E in that order
+    move = visited[player.current_room.id].pop(0)
+    #add the move's direction to the traversal_path first before moving
+    traversal_path.append(move)
+    #add opposite direction to reverse list before moving
+    reversedlist.append(reverse(move))
+    #move in direction
+    player.travel(move)
 
 
+#this function is set up so that only reverses directions when the exits from the room ==1, it offsets that,
+# goes back, and continues to go back the way it came, until it reaches the initial branching point, until search full map
 
 
 # TRAVERSAL TEST
