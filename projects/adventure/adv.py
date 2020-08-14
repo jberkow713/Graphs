@@ -360,6 +360,8 @@ while len(visited) < 499:
 
 #this function is set up so that only reverses directions when the exits from the room ==1, it offsets that,
 # goes back, and continues to go back the way it came, until it reaches the initial branching point, until search full map
+# the reverselist is storing a way to get back to an initial room with multiple exits, as the exits are exhausted from each room,
+# the reverselist is keeping track of the way back to the initial point
 
 
 # TRAVERSAL TEST
