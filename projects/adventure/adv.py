@@ -326,6 +326,7 @@ while len(visited) < 499:
         visited[player.current_room.id] = player.current_room.get_exits()
         visited[player.current_room.id].remove(reversedlist[-1])
 
+
     #this represents when you enter a room with only one exit and you backtrack
     # the last object in the reverse list will always be the direction you have just gone, so they will cancel out,
     # and the length of the dictionary with that room will be 0
@@ -362,6 +363,8 @@ while len(visited) < 499:
 # goes back, and continues to go back the way it came, until it reaches the initial branching point, until search full map
 # the reverselist is storing a way to get back to an initial room with multiple exits, as the exits are exhausted from each room,
 # the reverselist is keeping track of the way back to the initial point
+# it will always backtrack to the original point with multiple exits, but it will do it ONCE it has fully exhausted all branches 
+# coming off of the point itself
 
 
 # TRAVERSAL TEST
